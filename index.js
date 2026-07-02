@@ -1,3 +1,6 @@
+// Chargement des variables d'environnement du fichier .env
+require('dotenv').config();
+
 const { 
     Client, 
     GatewayIntentBits, 
@@ -23,8 +26,8 @@ const activeSessions = new Map();
 // Configuration du bot
 const PREFIX = "!"; 
 
-// 🔄 REMETS TON TOKEN ENTIER ENTRE LES GUILLEMETS ICI :
-const TOKEN = "MTUyMjAyODg2NTc4MDcxNTYzMQ.GUsxj6.Iju43xWDmIVQZWHU52NYKCjw2IiEd3l9D5AFsg"; 
+// Récupération automatique du token depuis le fichier .env
+const TOKEN = process.env.DISCORD_TOKEN; 
 
 client.once('ready', () => {
     console.log(`🤖 Bot connecté avec succès en tant que ${client.user.tag}!`);
@@ -34,7 +37,6 @@ client.once('ready', () => {
 client.on('messageCreate', async (message) => {
     if (message.author.bot || !message.content.startsWith(PREFIX)) return;
 
-    // LIGNE 36 CORRIGÉE : Séparation correcte des arguments par espaces
     const args = message.content.slice(PREFIX.length).trim().split(/ +/);
     const command = args.shift().toLowerCase();
 
@@ -106,7 +108,6 @@ client.on('interactionCreate', async (interaction) => {
         }
 
         if (session.status === 'En service') {
-            // Passage en pause
             session.status = 'En pause';
             session.pauseStartTime = now;
             activeSessions.set(userId, session);
@@ -125,7 +126,6 @@ client.on('interactionCreate', async (interaction) => {
             return interaction.reply({ embeds: [pauseEmbed] });
 
         } else if (session.status === 'En pause') {
-            // Retour de pause
             const pauseDuration = now - session.pauseStartTime;
             session.totalPauseTime += pauseDuration;
             session.status = 'En service';
@@ -154,15 +154,12 @@ client.on('interactionCreate', async (interaction) => {
         }
 
         let finalPauseTime = session.totalPauseTime;
-        // Si l'utilisateur clique sur stop alors qu'il était encore en pause
         if (session.status === 'En pause') {
             finalPauseTime += (now - session.pauseStartTime);
         }
 
-        // Calcul du temps total de travail effectif
         const totalDurationMs = now - session.startTime - finalPauseTime;
         
-        // Formatage en Heures / Minutes / Secondes
         const totalSeconds = Math.floor(totalDurationMs / 1000);
         const hours = Math.floor(totalSeconds / 3600);
         const minutes = Math.floor((totalSeconds % 3600) / 60);
@@ -182,7 +179,6 @@ client.on('interactionCreate', async (interaction) => {
             )
             .setTimestamp();
 
-        // Supprimer la session de la mémoire après la fin
         activeSessions.delete(userId);
 
         return interaction.reply({ embeds: [stopEmbed] });
