@@ -18,11 +18,12 @@ const client = new Client({
 });
 
 // Map pour stocker les sessions de pointage en mémoire
-// Clé: userId, Valeur: { startTime, totalPauseTime, pauseStartTime, status }
 const activeSessions = new Map();
 
 // Configuration du bot
-const PREFIX = "!"; // Tu peux taper !pointeuse pour lancer le système
+const PREFIX = "!"; 
+
+// 🔄 REMETS TON TOKEN ENTIER ENTRE LES GUILLEMETS ICI :
 const TOKEN = "MTUyMjAyODg2NTc4MDcxNTYzMQ.G-KeAd.BsjGnLLkMeDU7iOtY_HiE6Woo4cY1hRrfSCcdU"; 
 
 client.once('ready', () => {
@@ -33,7 +34,8 @@ client.once('ready', () => {
 client.on('messageCreate', async (message) => {
     if (message.author.bot || !message.content.startsWith(PREFIX)) return;
 
-    const args = message.content.slice(PREFIX.length).trim().split(/+/);
+    // LIGNE 36 CORRIGÉE : Séparation correcte des arguments par espaces
+    const args = message.content.slice(PREFIX.length).trim().split(/ +/);
     const command = args.shift().toLowerCase();
 
     if (command === 'pointeuse') {
