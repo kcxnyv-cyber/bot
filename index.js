@@ -24,7 +24,7 @@ const activeSessions = new Map();
 const PREFIX = "!"; 
 
 // 🔄 REMETS TON TOKEN ENTIER ENTRE LES GUILLEMETS ICI :
-const TOKEN = "MTUyMjAyODg2NTc4MDcxNTYzMQ.GnVbjG.Ptiaeb6d6U47ET0nsRYu54tTay-hg6qac0kVis"; 
+const TOKEN = "MTUyMjAyODg2NTc4MDcxNTYzMQ.GUsxj6.Iju43xWDmIVQZWHU52NYKCjw2IiEd3l9D5AFsg"; 
 
 client.once('ready', () => {
     console.log(`🤖 Bot connecté avec succès en tant que ${client.user.tag}!`);
